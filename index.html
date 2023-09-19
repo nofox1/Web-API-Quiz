@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/style.css" />
+    <title>Quiz</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Veiw high scores & Timer -->
+      <div class="nav-bar">
+        <button class="highscores">Veiw HighScores</button>
+        <p class="timer" id="timer"></p>
+      </div>
+
+      <div class="quiz-head">
+        <div class="header">
+          <h1 class="quiz-title">Welcome to the quiz</h1>
+          <p class="rules">Text description</p>
+          <button class="start-btn" id="start-btn" id="startquiz">Start Quiz</button>
+        </div>
+      </div>
+
+      <div class="quiz-content">
+        <section class="quiz-body">
+          <h2 id="questions"></h2>
+          <ul>
+            <li id="choices"><button id="choicea"></button></li>
+            <li id="choices"><button id="choiceb"></button></li>
+            <li id="choices"><button id="choicec"></button></li>
+            <li id="choices"><button id="choiced"></button></li>
+          </ul>
+        </section>
+
+        <section class="quiz-results">
+          <h2>Quiz Finished</h2>
+          <p>Your score is <span id="results"></span></p>
+          <div>
+            <label for="">Enter initials</label>
+            <input type="text" id="initials" max="3" />
+            <button id="submit-btn">Submit</button>
+          </div>
+        </section>
+
+        <section class="highscore-view">
+          <h2>Highscores:</h2>
+          <ol>
+            <li>NF - 20</li>
+            <li>NF - 20</li>
+            <li>NF - 20</li>
+            <li>NF - 20</li>
+          </ol>
+        </section>
+      </div>
+    </div>
+
+    <script src="./assets/script.js"></script>
+  </body>
+</html>
