@@ -1,79 +1,151 @@
 var questions = [
-{
-        question : 'Who won the super bowl last year?',
-        choicea: 'Browns',
-        choiceb: 'Chargers',
-        choicec: 'Eagles',
-        choiced: 'Chiefs',
-        correct: 'd'
-},
-{
-        question : 'How tall is mount everest',
-        choicea: '29,032 feet',
-        choiceb: '15,653 feet',
-        choicec: '23,645 feet',
-        choiced: '11,000 feet',
-        correct: 'a'
-},
-{
-        question: 'When did D-Day happen?',
-        choicea: 'June 5, 1944',
-        choiceb: 'June 6, 1944',
-        choicec: 'July 6, 1944',
-        choiced: 'July 5, 1944',
-        correct: 'b' 
-},
-{
-        question: 'What was the most used computer language in 2022?',
-        choicea: 'Python',
-        choiceb: 'PHP',
-        choicec: 'Javascript',
-        choiced: 'IaC',
-        correct: 'c'
-},
-{
-        question: 'How many planets are in our solar system?',
-        choicea: '5 planets',
-        choiceb: '6 planets',
-        choicec: '7 planets',
-        choiced: '8 planets',
-        correct: 'd'
-}
+  {
+    question: "Who won the super bowl last year?",
+    answers: [
+      { text: "Browns", correct: false },
+      { text: "Chargers", correct: false },
+      { text: "Eagles", correct: false },
+      { text: "Chiefs", correct: true },
+    ],
+  },
+  {
+    question: "How tall is mount everest?",
+    answers: [
+      { text: "29,032 feet", correct: true },
+      { text: "15,653 feet", correct: false },
+      { text: "23,645 feet", correct: false },
+      { text: "11,000 feet", correct: false },
+    ],
+  },
+  {
+    question: "When did D-Day happen?",
+    answers: [
+      { text: "June 5, 1944", correct: false },
+      { text: "June 6, 1944", correct: true },
+      { text: "July 5, 1944", correct: false },
+      { text: "July 6, 1944", correct: false },
+    ],
+  },
+  {
+    question: "What was the most used computer language in 2022?",
+    answers: [
+      { text: "Python", correct: false },
+      { text: "PHP", correct: false },
+      { text: "Javascript", correct: true },
+      { text: "IaC", correct: false },
+    ],
+  },
+  {
+    question: "How many planets are in our solar system?",
+    answers: [
+      { text: "5 planets", correct: false },
+      { text: "6 planets", correct: false },
+      { text: "7 planets", correct: false },
+      { text: "8 planets", correct: true },
+    ],
+  },
 ];
 
-var startEl = document.querySelector('#start');
-var questionsEl = document.querySelector('#questions');
-var answersEl = document.querySelector('#choices'); 
-var timerEl = document.querySelector('#time');
-var initialsEl = document.querySelector('#initials');
+var startEl = document.getElementById("start-btn");
+var nextEl = document.getElementById("next-btn");
+var questionsEl = document.getElementById("question");
+var answersbuttonsEl = document.getElementsByClassName("answers");
+var titleEl = document.getElementById("quiz-head");
+var timerEl = document.getElementById("time")
 
-var time = questions.length * 15;
-var timerid;
+var randomQuestions, presentQuestionIndex;
+var timer;
+var timerCount = 10;
+var questionscorrect = 0;
 
+nextEl.addEventListener("click", () => {
+  presentQuestionIndex++;
+  createQuestion();
+});
 
-var lastQuestionIndex = questions.length - 1;
-var runningQuestionIndex = 0;
+function startquiz() {
+  document.getElementById("start-btn").classList.add("hide");
 
-function startquiz(){
-        var quizstart = document.getElementById('start-btn');
-        quizstart.setAttribute('class','hide');
-        
-        questionsEl.removeAttribute('class');
+  titleEl.classList.add("hide");
 
-        timerid =setInterval(clocktick, 1000);
+  randomQuestions = questions.sort(() => Math.random() - 0.5);
+  presentQuestionIndex = 0;
 
-        timerEl.textContent = time;
+  document.getElementById("quiz-content").style.display = "block";
+  nextEl.classList.add("hide");
 
-        createQuestion();
+  createQuestion();
+  setTimer();
+  
 }
 
-function createQuestion(){
-    var q = questions[runningQuestionIndex];
-    question.innerHtml = '<p>' + q.question + '</p>';
-    choicea.innerHtml = q.choicea;
-    choiceb.innerHtml = q.choiceb;
-    choicec.innerHtml = q.choicec;
-    choiced.innerHtml = q.choiced;
+function createQuestion() {
+  resetList();
+  newQuestion(randomQuestions[presentQuestionIndex]);
 }
 
+function newQuestion(question) {
+  questionsEl.innerText = question.question;
+  for (let i = 0; i < question.answers.length; i++) {
+    answersbuttonsEl[i].innerText = question.answers[i].text
+    answersbuttonsEl[i].dataset.correct = question.answers[i].correct;
+    answersbuttonsEl[i].addEventListener("click", selectAnswer);
+  }
+}
 
+function selectAnswer(e) {
+  if (e.target.dataset.correct == 'true'){
+    questionscorrect++;
+  }
+  Array.from(answersbuttonsEl).forEach((button) => {
+    setStatus(button, button.dataset.correct);
+  });
+  if (randomQuestions.length != presentQuestionIndex + 1) {
+    nextEl.classList.remove("class", "hide");
+  } else {
+    startEl.innerText = "Restart";
+    startEl.classList.remove("class", "hide");
+    document.getElementById('start')
+  } 
+}
+
+function setStatus(element, correct) {
+  clearStatus(element);
+  if (correct == 'true') {
+    element.classList.add("correct");
+  } else {
+    element.classList.add("wrong");
+  }
+}
+
+function clearStatus(element) {
+  element.classList.remove("correct");
+  element.classList.remove("wrong");
+}
+
+function resetList() {
+  nextEl.classList.add("hide");
+  Array.from(answersbuttonsEl).forEach((button) => {
+    clearStatus(button);
+  });
+}
+function setTimer(){
+  timer = setInterval(function() {
+    timerCount--;
+    timerEl.textContent = timerCount;
+    if (timerCount === 0){
+        startEl.innerText = "Restart";
+        startEl.classList.remove("class", "hide");
+    }if (timerCount === 0){
+        nextEl.classList.add('hide')
+        clearInterval(timer)
+    }
+}, 1000);
+}
+function end (){
+  
+
+    
+    
+    
+}
